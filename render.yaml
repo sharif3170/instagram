@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: insta-downloader
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    envVars:
+      - key: NODE_ENV
+        value: production
+    buildFilter:
+      paths:
+        - package.json
+        - server.js
+        - cookies.json
+        - render.yaml
