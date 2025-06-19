@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Instagram Video Downloader</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: #f0f0f0;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    input {
+      width: 60%;
+    }
+    video {
+      margin-top: 20px;
+      max-width: 90%;
+    }
+  </style>
+</head>
+<body>
+  <h2>Instagram Reel Downloader</h2>
+  <input type="text" id="igUrl" placeholder="Paste Instagram Reel URL here" />
+  <br>
+  <button onclick="downloadVideo()">Fetch Video</button>
+  <div id="output"></div>
+
+  <script>
+    async function downloadVideo() {
+      const url = document.getElementById("igUrl").value;
+      const output = document.getElementById("output");
+      output.innerHTML = "Fetching video...";
+
+      try {
+        const response = await fetch(`http://localhost:3000/insta?url=${encodeURIComponent(url)}`);
+        const data = await response.json();
+
+        if (data.success) {
+          output.innerHTML = `
+            <video controls>
+              <source src="${data.videoUrl}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+            <br>
+            <a href="/videos/${data.file}" download>⬇️ Download Video</a>
+          `;
+        } else {
+          output.innerHTML = "❌ " + data.message;
+        }
+      } catch (err) {
+        console.error(err);
+        output.innerHTML = "❌ Failed to fetch video.";
+      }
+    }
+  </script>
+</body>
+</html>
